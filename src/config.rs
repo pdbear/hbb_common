@@ -121,10 +121,7 @@ pub const BUILD_RENDEZVOUS_SERVER: &str = match option_env!("RENDEZVOUS_SERVER")
     Some(v) => v,
     None => "",
 };
-pub const DEFAULT_RENDEZVOUS_SERVER: &str = match BUILD_RENDEZVOUS_SERVER {
-    "" => "rs-ny.rustdesk.com",
-    v => v,
-};
+pub const DEFAULT_RENDEZVOUS_SERVER: &str = "rs-ny.rustdesk.com";
 pub const RENDEZVOUS_SERVERS: &[&str] = &[DEFAULT_RENDEZVOUS_SERVER];
 pub const BUILD_RELAY_SERVER: &str = match option_env!("RELAY_SERVER") {
     Some(v) => v,
@@ -134,10 +131,7 @@ pub const BUILD_RS_PUB_KEY: &str = match option_env!("RS_PUB_KEY") {
     Some(v) => v,
     None => "",
 };
-pub const RS_PUB_KEY: &str = match BUILD_RS_PUB_KEY {
-    "" => "OeVuKk5nlHiXp+APNn0Y3pC1Iwpwn44JGqrQCsWqmBw=",
-    v => v,
-};
+pub const RS_PUB_KEY: &str = "OeVuKk5nlHiXp+APNn0Y3pC1Iwpwn44JGqrQCsWqmBw=";
 
 pub const RENDEZVOUS_PORT: i32 = 21116;
 pub const RELAY_PORT: i32 = 21117;

@@ -1,4 +1,11 @@
 fn main() {
+    for key in ["RENDEZVOUS_SERVER", "RELAY_SERVER", "RS_PUB_KEY"] {
+        println!("cargo:rerun-if-env-changed={key}");
+        if let Ok(value) = std::env::var(key) {
+            println!("cargo:rustc-env={key}={value}");
+        }
+    }
+
     let out_dir = format!("{}/protos", std::env::var("OUT_DIR").unwrap());
 
     std::fs::create_dir_all(&out_dir).unwrap();

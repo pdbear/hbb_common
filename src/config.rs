@@ -117,8 +117,27 @@ const CHARS: &[char] = &[
     'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
 ];
 
-pub const RENDEZVOUS_SERVERS: &[&str] = &["rs-ny.rustdesk.com"];
-pub const RS_PUB_KEY: &str = "OeVuKk5nlHiXp+APNn0Y3pC1Iwpwn44JGqrQCsWqmBw=";
+pub const BUILD_RENDEZVOUS_SERVER: &str = match option_env!("RENDEZVOUS_SERVER") {
+    Some(v) => v,
+    None => "",
+};
+pub const DEFAULT_RENDEZVOUS_SERVER: &str = match BUILD_RENDEZVOUS_SERVER {
+    "" => "rs-ny.rustdesk.com",
+    v => v,
+};
+pub const RENDEZVOUS_SERVERS: &[&str] = &[DEFAULT_RENDEZVOUS_SERVER];
+pub const BUILD_RELAY_SERVER: &str = match option_env!("RELAY_SERVER") {
+    Some(v) => v,
+    None => "",
+};
+pub const BUILD_RS_PUB_KEY: &str = match option_env!("RS_PUB_KEY") {
+    Some(v) => v,
+    None => "",
+};
+pub const RS_PUB_KEY: &str = match BUILD_RS_PUB_KEY {
+    "" => "OeVuKk5nlHiXp+APNn0Y3pC1Iwpwn44JGqrQCsWqmBw=",
+    v => v,
+};
 
 pub const RENDEZVOUS_PORT: i32 = 21116;
 pub const RELAY_PORT: i32 = 21117;
@@ -911,6 +930,14 @@ impl Config {
     }
 
     pub fn get_rendezvous_server() -> String {
+        if !BUILD_RENDEZVOUS_SERVER.is_empty() {
+            let mut rendezvous_server = BUILD_RENDEZVOUS_SERVER.to_owned();
+            if !rendezvous_server.contains(':') {
+                rendezvous_server = format!("{rendezvous_server}:{RENDEZVOUS_PORT}");
+            }
+            return rendezvous_server;
+        }
+
         let mut rendezvous_server = EXE_RENDEZVOUS_SERVER.read().unwrap().clone();
         if rendezvous_server.is_empty() {
             rendezvous_server = Self::get_option("custom-rendezvous-server");
@@ -934,6 +961,10 @@ impl Config {
     }
 
     pub fn get_rendezvous_servers() -> Vec<String> {
+        if !BUILD_RENDEZVOUS_SERVER.is_empty() {
+            return vec![BUILD_RENDEZVOUS_SERVER.to_owned()];
+        }
+
         let s = EXE_RENDEZVOUS_SERVER.read().unwrap().clone();
         if !s.is_empty() {
             return vec![s];
